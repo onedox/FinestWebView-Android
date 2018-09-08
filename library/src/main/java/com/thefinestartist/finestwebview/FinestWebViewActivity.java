@@ -51,6 +51,8 @@ import com.thefinestartist.finestwebview.helpers.ColorHelper;
 import com.thefinestartist.finestwebview.helpers.TypefaceHelper;
 import com.thefinestartist.finestwebview.helpers.UrlParser;
 import com.thefinestartist.finestwebview.listeners.BroadCastManager;
+import com.thefinestartist.finestwebview.listeners.JavaScriptInjectionSource;
+import com.thefinestartist.finestwebview.listeners.JavaScriptInjectionSourceCallback;
 import com.thefinestartist.finestwebview.views.ShadowLayout;
 import com.thefinestartist.utils.etc.APILevel;
 import com.thefinestartist.utils.service.ClipboardManagerUtil;
@@ -186,7 +188,7 @@ public class FinestWebViewActivity extends AppCompatActivity
   protected Integer webViewMixedContentMode;
   protected Boolean webViewOffscreenPreRaster;
 
-  protected String injectJavaScript;
+  protected JavaScriptInjectionSource javaScriptInjectionSource;
 
   protected String mimeType;
   protected String encoding;
@@ -426,8 +428,6 @@ public class FinestWebViewActivity extends AppCompatActivity
     webViewCacheMode = builder.webViewCacheMode;
     webViewMixedContentMode = builder.webViewMixedContentMode;
     webViewOffscreenPreRaster = builder.webViewOffscreenPreRaster;
-
-    injectJavaScript = builder.injectJavaScript;
 
     mimeType = builder.mimeType;
     encoding = builder.encoding;
@@ -1206,6 +1206,10 @@ public class FinestWebViewActivity extends AppCompatActivity
     }, ViewConfiguration.getZoomControlsTimeout() + 1000L);
   }
 
+  public WebView getWebView() {
+      return webView;
+  }
+
   public class MyWebChromeClient extends WebChromeClient {
 
     @Override
@@ -1277,10 +1281,6 @@ public class FinestWebViewActivity extends AppCompatActivity
       } else {
         back.setVisibility(View.GONE);
         forward.setVisibility(View.GONE);
-      }
-
-      if (injectJavaScript != null) {
-        webView.evaluateJavascript(injectJavaScript, null);
       }
     }
 

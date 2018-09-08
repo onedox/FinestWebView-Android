@@ -17,6 +17,7 @@ import android.webkit.WebSettings;
 import com.thefinestartist.Base;
 import com.thefinestartist.finestwebview.enums.Position;
 import com.thefinestartist.finestwebview.listeners.BroadCastManager;
+import com.thefinestartist.finestwebview.listeners.JavaScriptInjectionSource;
 import com.thefinestartist.finestwebview.listeners.WebViewListener;
 import com.thefinestartist.utils.content.Ctx;
 import com.thefinestartist.utils.content.Res;
@@ -157,7 +158,7 @@ public class FinestWebView {
     protected Integer webViewMixedContentMode;
     protected Boolean webViewOffscreenPreRaster;
 
-    protected String injectJavaScript;
+    protected transient JavaScriptInjectionSource javaScriptInjectionSource;
 
     protected String mimeType;
     protected String encoding;
@@ -888,8 +889,8 @@ public class FinestWebView {
           "Mozilla/5.0 (X11; U; Linux i686; en-US; rv:1.9.0.4) Gecko/20100101 Firefox/4.0");
     }
 
-    public Builder injectJavaScript(String injectJavaScript) {
-      this.injectJavaScript = injectJavaScript;
+    public Builder withJavaScriptInjectionSource(JavaScriptInjectionSource javaScriptInjectionSource) {
+      this.javaScriptInjectionSource = javaScriptInjectionSource;
       return this;
     }
 
@@ -923,6 +924,8 @@ public class FinestWebView {
       if (!listeners.isEmpty()) {
         new BroadCastManager(context, key, listeners);
       }
+
+      BroadCastManager.javaScriptInjectionSource = javaScriptInjectionSource;
 
       Intent intent = new Intent(context, FinestWebViewActivity.class);
       intent.putExtra("builder", this);

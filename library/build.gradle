@@ -1,6 +1,8 @@
 apply from: '../gradle/dependencies.gradle'
 apply plugin: 'com.android.library'
 apply plugin: 'com.novoda.bintray-release'
+apply plugin: 'com.jfrog.artifactory'
+apply plugin: 'maven-publish'
 
 android {
     compileSdkVersion versions.compileSdk
@@ -39,3 +41,34 @@ publish {
 }
 
 //$ ./gradlew clean build bintrayUpload -PbintrayUser=thefinestartist -PbintrayKey=BINTRAY_KEY -PdryRun=false
+
+publishing {
+    publications {
+        aar(MavenPublication) {
+            groupId publish.groupId
+            version publish.publishVersion
+            artifactId publish.artifactId
+
+            artifact("$buildDir/outputs/aar/library-release.aar")
+        }
+    }
+}
+
+artifactory {
+    contextUrl = onedox_maven_repo
+    publish {
+        repository {
+            repoKey = 'libs-release-local'
+
+            username = onedox_maven_username
+            password = onedox_maven_password
+        }
+        defaults {
+            publications('aar')
+            publishArtifacts = true
+
+            properties = ['qa.level': 'basic', 'q.os': 'android', 'dev.team': 'core']
+            publishPom = true
+        }
+    }
+}

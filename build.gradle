@@ -10,6 +10,7 @@ buildscript {
     dependencies {
         classpath 'com.android.tools.build:gradle:' + versions.gradlePlugin
         classpath 'com.novoda:bintray-release:' + versions.bintrayRelease
+        classpath 'org.jfrog.buildinfo:build-info-extractor-gradle:4.+'
     }
 }
 

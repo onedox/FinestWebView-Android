@@ -4,7 +4,11 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Gravity;
 import android.view.View;
+import android.webkit.WebView;
+
 import com.thefinestartist.finestwebview.FinestWebView;
+import com.thefinestartist.finestwebview.listeners.JavaScriptInjectionSource;
+import com.thefinestartist.finestwebview.listeners.JavaScriptInjectionSourceCallback;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -33,9 +37,14 @@ public class MainActivity extends AppCompatActivity {
           .gradientDivider(false)
           .setCustomAnimations(R.anim.activity_open_enter, R.anim.activity_open_exit,
               R.anim.activity_close_enter, R.anim.activity_close_exit)
-          .injectJavaScript("javascript: document.getElementById('msg').innerHTML='Hello "
-              + "TheFinestArtist"
-              + "!';")
+          .withJavaScriptInjectionSource(new JavaScriptInjectionSource() {
+            @Override
+            public void getJavaScriptToInject(String url, WebView webView, JavaScriptInjectionSourceCallback callback) {
+                callback.injectJavaScript("javascript: document.getElementById('msg').innerHTML='Hello "
+                      + "TheFinestArtist"
+                      + "!';");
+            }
+          })
           .show("http://www.blessthisstuff.com");
     } else if (view.getId() == R.id.blueTheme) {
       new FinestWebView.Builder(this).theme(R.style.FinestWebViewTheme)

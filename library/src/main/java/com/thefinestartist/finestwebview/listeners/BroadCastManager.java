@@ -4,8 +4,13 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.v4.content.LocalBroadcastManager;
+import android.webkit.WebView;
+
+import com.thefinestartist.finestwebview.FinestWebViewActivity;
+
 import java.util.List;
 
 /**
@@ -26,6 +31,7 @@ public class BroadCastManager {
   static final String EXTRA_CONTENT_LENGTH = "EXTRA_CONTENT_LENGTH";
 
   protected int key;
+  public static JavaScriptInjectionSource javaScriptInjectionSource;
   protected List<WebViewListener> listeners;
   protected LocalBroadcastManager manager;
   protected BroadcastReceiver receiver = new BroadcastReceiver() {
@@ -84,6 +90,19 @@ public class BroadCastManager {
   public static void onPageFinished(Context context, int key, String url) {
     Intent intent = getBaseIntent(key, Type.PAGE_FINISHED).putExtra(EXTRA_URL, url);
     sendBroadCast(context, intent);
+
+    if (javaScriptInjectionSource != null) {
+      final WebView webView = ((FinestWebViewActivity) context).getWebView();
+
+      javaScriptInjectionSource.getJavaScriptToInject(intent.getStringExtra(EXTRA_URL), webView,new JavaScriptInjectionSourceCallback() {
+        @Override
+        public void injectJavaScript(String injectJavaScript) {
+          if (injectJavaScript != null && Build.VERSION.SDK_INT >= 19) {
+            webView.evaluateJavascript(injectJavaScript, null);
+          }
+        }
+      });
+    }
   }
 
   public static void onLoadResource(Context context, int key, String url) {
