@@ -18,6 +18,7 @@ import com.thefinestartist.Base;
 import com.thefinestartist.finestwebview.enums.Position;
 import com.thefinestartist.finestwebview.listeners.BroadCastManager;
 import com.thefinestartist.finestwebview.listeners.JavaScriptInjectionSource;
+import com.thefinestartist.finestwebview.listeners.OverrideUrlLoadingHandler;
 import com.thefinestartist.finestwebview.listeners.WebViewListener;
 import com.thefinestartist.utils.content.Ctx;
 import com.thefinestartist.utils.content.Res;
@@ -159,6 +160,7 @@ public class FinestWebView {
     protected Boolean webViewOffscreenPreRaster;
 
     protected transient JavaScriptInjectionSource javaScriptInjectionSource;
+    protected transient OverrideUrlLoadingHandler overrideUrlLoadingHandler;
 
     protected String mimeType;
     protected String encoding;
@@ -894,6 +896,11 @@ public class FinestWebView {
       return this;
     }
 
+    public Builder withOverrideUrlLoadingHandler(OverrideUrlLoadingHandler overrideUrlLoadingHandler) {
+      this.overrideUrlLoadingHandler = overrideUrlLoadingHandler;
+      return this;
+    }
+
     public void load(@StringRes int dataRes) {
       load(Res.getString(dataRes));
     }
@@ -926,6 +933,7 @@ public class FinestWebView {
       }
 
       BroadCastManager.javaScriptInjectionSource = javaScriptInjectionSource;
+      BroadCastManager.overrideUrlLoadingHandler = overrideUrlLoadingHandler;
 
       Intent intent = new Intent(context, FinestWebViewActivity.class);
       intent.putExtra("builder", this);

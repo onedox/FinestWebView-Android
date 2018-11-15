@@ -32,6 +32,8 @@ public class BroadCastManager {
 
   protected int key;
   public static JavaScriptInjectionSource javaScriptInjectionSource;
+  public static OverrideUrlLoadingHandler overrideUrlLoadingHandler;
+
   protected List<WebViewListener> listeners;
   protected LocalBroadcastManager manager;
   protected BroadcastReceiver receiver = new BroadcastReceiver() {

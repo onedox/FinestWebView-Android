@@ -53,6 +53,7 @@ import com.thefinestartist.finestwebview.helpers.UrlParser;
 import com.thefinestartist.finestwebview.listeners.BroadCastManager;
 import com.thefinestartist.finestwebview.listeners.JavaScriptInjectionSource;
 import com.thefinestartist.finestwebview.listeners.JavaScriptInjectionSourceCallback;
+import com.thefinestartist.finestwebview.listeners.OverrideUrlLoadingHandler;
 import com.thefinestartist.finestwebview.views.ShadowLayout;
 import com.thefinestartist.utils.etc.APILevel;
 import com.thefinestartist.utils.service.ClipboardManagerUtil;
@@ -187,8 +188,6 @@ public class FinestWebViewActivity extends AppCompatActivity
   protected Integer webViewCacheMode;
   protected Integer webViewMixedContentMode;
   protected Boolean webViewOffscreenPreRaster;
-
-  protected JavaScriptInjectionSource javaScriptInjectionSource;
 
   protected String mimeType;
   protected String encoding;
@@ -1318,6 +1317,8 @@ public class FinestWebViewActivity extends AppCompatActivity
         startActivity(emailIntent);
 
         return true;
+      } else if (BroadCastManager.overrideUrlLoadingHandler != null) {
+        return BroadCastManager.overrideUrlLoadingHandler.shouldOverrideUrlLoading(view, url);
       } else {
         return super.shouldOverrideUrlLoading(view, url);
       }
